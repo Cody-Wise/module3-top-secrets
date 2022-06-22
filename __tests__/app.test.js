@@ -42,6 +42,16 @@ describe('backend-express-template routes', () => {
     expect(res2.status).toEqual(200);
   });
 
+  it('Posting to Secrets Fails When Not Logged in', async () => {
+    await request(app)
+      .post('/api/v1/secrets')
+      .send({ title: 'Best Secret', description: 'This is a test secret' });
+    const res = await request(app);
+    expect(res.body).toEqual({
+      message: 'You must be signed in to continue',
+      status: 401,
+    });
+  });
   afterAll(() => {
     pool.end();
   });
